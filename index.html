@@ -31,6 +31,9 @@
             /* Accessible button color: #0077CC on white = 4.78:1 (AA pass) */
             --q-btn: #0077CC;
             --q-btn-hover: #008AE6;
+            /* Layout tokens (G11) */
+            --page-max: 1320px;
+            --page-pad: 32px;
         }
 
         /* ===== RESET ===== */
@@ -71,7 +74,7 @@
         .skip-link:focus { top: 16px; }
 
         /* ===== LAYOUT ===== */
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 1; }
+        .container { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--page-pad); position: relative; z-index: 1; }
         section { padding: 96px 0; position: relative; }
         section + section { border-top: 1px solid var(--q-border); }
 
@@ -86,10 +89,10 @@
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--q-border);
-            padding: 0 32px;
+            padding: 0 var(--page-pad);
         }
         .nav-inner {
-            max-width: 1200px;
+            max-width: var(--page-max);
             margin: 0 auto;
             display: flex;
             align-items: center;
@@ -103,15 +106,15 @@
             text-decoration: none;
             flex-shrink: 0;
         }
-        .nav-logo svg { width: 36px; height: 36px; flex-shrink: 0; }
+        .nav-logo svg { width: clamp(36px, 4vw, 48px); height: clamp(36px, 4vw, 48px); flex-shrink: 0; }
         .nav-wordmark {
-            font-size: 20px;
+            font-size: clamp(18px, 2vw, 22px);
             font-weight: 700;
             background: var(--q-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
         }
         .nav-links {
             display: flex;
@@ -514,19 +517,24 @@
 <nav aria-label="Main navigation">
     <div class="nav-inner">
         <a href="#" class="nav-logo" aria-label="Quankey QSA home">
-            <svg viewBox="53 56 94 88" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <svg viewBox="109 115 102 93" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <title>Quankey logo</title>
                 <defs>
                     <linearGradient id="navGrad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00A6FB"/><stop offset="50%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#0084D4"/></linearGradient>
                     <linearGradient id="navGrad2" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#00A6FB"/></linearGradient>
+                    <filter id="navGlow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
                 </defs>
-                <g transform="translate(100, 100)">
+                <g transform="translate(160, 160)">
                     <path d="M -45,0 L -22.5,-39 L 22.5,-39 L 45,0 L 22.5,39 L -22.5,39 Z" stroke="url(#navGrad1)" stroke-width="2.5" fill="none" opacity="0.5"/>
                     <path d="M -30,0 L -15,-26 L 15,-26 L 30,0 L 15,26 L -15,26 Z" stroke="url(#navGrad1)" stroke-width="3" fill="none" opacity="0.75"/>
-                    <path d="M -12,0 L -6,-10.4 L 6,-10.4 L 12,0 L 6,10.4 L -6,10.4 Z" fill="none" stroke="url(#navGrad2)" stroke-width="3.5"/>
-                    <rect x="-3" y="10" width="6" height="32" fill="url(#navGrad2)"/>
-                    <rect x="-3" y="38" width="3" height="4" fill="url(#navGrad2)"/>
-                    <rect x="2" y="36" width="3" height="6" fill="url(#navGrad2)"/>
-                    <circle cx="0" cy="0" r="3" fill="#00D4FF"/>
+                    <g filter="url(#navGlow)">
+                        <path d="M -12,0 L -6,-10.4 L 6,-10.4 L 12,0 L 6,10.4 L -6,10.4 Z" fill="none" stroke="url(#navGrad2)" stroke-width="3.5"/>
+                        <rect x="-3" y="10" width="6" height="32" fill="url(#navGrad2)"/>
+                        <rect x="-3" y="38" width="3" height="4" fill="url(#navGrad2)"/>
+                        <rect x="2" y="36" width="3" height="6" fill="url(#navGrad2)"/>
+                        <rect x="-1" y="40" width="2" height="2" fill="url(#navGrad2)"/>
+                        <circle cx="0" cy="0" r="3" fill="#00D4FF"/>
+                    </g>
                 </g>
             </svg>
             <span class="nav-wordmark">QUANKEY</span>
@@ -537,7 +545,7 @@
             <li><a href="#how-it-works">How it works</a></li>
             <li><a href="#pilot">Pilot</a></li>
         </ul>
-        <a class="nav-cta" href="mailto:jcano@cainmani.com?subject=QSA%20Pilot%20Inquiry">Request a pilot</a>
+        <a class="nav-cta" href="mailto:dev@quankey.xyz?subject=QSA%20Pilot%20Inquiry">Request a pilot</a>
     </div>
 </nav>
 
@@ -559,7 +567,7 @@
             <li>Generate repeatable evidence packs and diffs to track configuration drift</li>
         </ul>
         <div class="hero-actions">
-            <a class="btn-primary" href="mailto:jcano@cainmani.com?subject=QSA%20Pilot%20Inquiry">Request a pilot</a>
+            <a class="btn-primary" href="mailto:dev@quankey.xyz?subject=QSA%20Pilot%20Inquiry">Request a pilot</a>
             <a class="btn-secondary" href="#how-it-works">How it works</a>
         </div>
     </div>
@@ -757,8 +765,8 @@
         <div class="section-label">Get started</div>
         <h2>Request a pilot</h2>
         <p>Find out where your TLS infrastructure stands on crypto hygiene and PQC readiness. No cost, no commitment, no data leaves your network.</p>
-        <a class="btn-primary" href="mailto:jcano@cainmani.com?subject=QSA%20Pilot%20Inquiry">Contact us</a>
-        <span class="cta-email">jcano@cainmani.com</span>
+        <a class="btn-primary" href="mailto:dev@quankey.xyz?subject=QSA%20Pilot%20Inquiry">Contact us</a>
+        <span class="cta-email">dev@quankey.xyz</span>
     </div>
 </section>
 
@@ -769,7 +777,7 @@
     <div class="container">
         <p>Quankey QSA &mdash; TLS posture assurance and PQC readiness measurement. Performs passive TLS handshake analysis only. Does not exploit vulnerabilities, manage certificates, or implement PQC algorithms.</p>
         <div class="footer-links">
-            <a href="mailto:jcano@cainmani.com">Contact</a>
+            <a href="mailto:dev@quankey.xyz">Contact</a>
             <a href="https://github.com/JCQuankey/quankey-qsa-landing/blob/main/SECURITY.md">Responsible disclosure</a>
         </div>
         <p class="footer-standards">Standards referenced: NIST FIPS 203/204/205 (August 2024), NSA CNSA 2.0 (September 2022), NIST IR 8547 (November 2024), PCI-DSS v4.0</p>
