@@ -603,6 +603,7 @@
                 <ul>
                     <li>Scan host:port targets from your environment</li>
                     <li>Capture negotiated TLS parameters: protocol version, cipher suite, key exchange group (including PQC hybrid signals)</li>
+                    <li>Inspect leaf-certificate metadata: subject, issuer, expiry, signature algorithm, public-key type and length</li>
                     <li>Classify crypto hygiene and PQC readiness; produce machine-readable JSON output and an HTML report</li>
                     <li>Diff successive scans: improved, degraded, or neutral &mdash; with reasons per endpoint</li>
                 </ul>
@@ -612,6 +613,7 @@
                 <ul>
                     <li>Not a TLS proxy, VPN, or WAF &mdash; QSA is not inline with traffic</li>
                     <li>Not a PQC migration service &mdash; QSA measures readiness; it does not deploy PQC algorithms</li>
+                    <li>Not a certificate manager &mdash; QSA reads certificate metadata but does not issue, renew, rotate, or revoke certificates</li>
                     <li>Not SaaS &mdash; runs on your infrastructure with no telemetry</li>
                 </ul>
             </div>
@@ -767,7 +769,7 @@
 <!-- FOOTER -->
 <footer>
     <div class="container">
-        <p>Quankey QSA &mdash; TLS posture assurance and PQC readiness measurement. Performs passive TLS handshake analysis only. Does not exploit vulnerabilities, manage certificates, or implement PQC algorithms.</p>
+        <p>Quankey QSA &mdash; read-only TLS posture assurance and PQC readiness measurement. Passive analysis of TLS handshake negotiation and leaf-certificate metadata. Does not exploit vulnerabilities, issue or renew certificates, terminate TLS connections, or implement PQC algorithms.</p>
         <div class="footer-links">
             <a href="mailto:jcano@cainmani.com">Contact</a>
             <a href="https://github.com/JCQuankey/quankey-qsa-landing/blob/main/SECURITY.md">Responsible disclosure</a>
