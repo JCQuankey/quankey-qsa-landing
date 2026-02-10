@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quankey QSA - TLS Crypto Hygiene &amp; PQC Readiness Scanner</title>
-    <meta name="description" content="On-premises TLS crypto hygiene assessment and Post-Quantum Cryptography readiness scoring. Auditable evidence packs with hash-chain integrity.">
+    <title>Quankey QSA - Quantum-Safe Assurance for your TLS Perimeter</title>
+    <meta name="description" content="On-premises TLS crypto hygiene assessment and PQC readiness scoring. Repeatable evidence packs. No data leaves your network.">
     <meta name="robots" content="index, follow">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,7 +33,7 @@
         section { padding: 64px 0; }
         section:nth-child(even) { background: var(--light); }
 
-        /* Header */
+        /* Header / Hero */
         header {
             background: linear-gradient(135deg, #0A1628 0%, #1E3A5F 50%, #16213e 100%);
             color: var(--white);
@@ -46,14 +46,51 @@
             gap: 12px;
             margin-bottom: 16px;
         }
-        header .brand-icon {
-            width: 36px;
-            height: 36px;
-            flex-shrink: 0;
-        }
+        header .brand-icon { width: 36px; height: 36px; flex-shrink: 0; }
         header .brand { font-size: 14px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary); }
-        header h1 { font-size: 36px; font-weight: 700; line-height: 1.2; margin-bottom: 16px; }
-        header .subtitle { font-size: 18px; color: rgba(255,255,255,0.85); max-width: 640px; }
+        header h1 { font-size: 36px; font-weight: 700; line-height: 1.2; margin-bottom: 12px; }
+        header .subtitle { font-size: 18px; color: rgba(255,255,255,0.85); max-width: 640px; margin-bottom: 20px; }
+        header .hero-bullets { list-style: none; margin-bottom: 28px; max-width: 640px; }
+        header .hero-bullets li {
+            padding: 6px 0 6px 20px;
+            position: relative;
+            font-size: 15px;
+            color: rgba(255,255,255,0.9);
+        }
+        header .hero-bullets li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 14px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
+        }
+        header .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+        /* Buttons */
+        .btn-primary {
+            display: inline-block;
+            background: linear-gradient(135deg, #00A6FB 0%, #00D4FF 100%);
+            color: var(--white);
+            padding: 14px 28px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            box-shadow: 0 4px 20px rgba(0, 166, 251, 0.3);
+        }
+        .btn-secondary {
+            display: inline-block;
+            color: var(--white);
+            padding: 14px 28px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 15px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
 
         /* Typography */
         h2 {
@@ -68,47 +105,37 @@
         p { margin-bottom: 16px; }
         .section-intro { font-size: 18px; color: var(--dark); margin-bottom: 32px; max-width: 720px; }
 
-        /* Problem Stats */
-        .stats-row {
+        /* Two-column grid (scope, pilot) */
+        .two-col {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 24px;
-            margin: 32px 0;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin: 24px 0;
         }
-        .stat-card {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 24px;
-            border-top: 3px solid var(--primary);
-        }
-        section:nth-child(even) .stat-card { background: var(--white); }
-        .stat-card .number {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--navy);
-            line-height: 1;
-            margin-bottom: 8px;
-        }
-        .stat-card .label { font-size: 14px; color: var(--gray); }
-        .stat-card .source { font-size: 11px; color: var(--gray); margin-top: 8px; }
+        .two-col h3 { margin-bottom: 12px; }
+        .two-col ul { margin: 0 0 0 20px; }
+        .two-col li { margin-bottom: 10px; font-size: 14px; line-height: 1.5; }
 
-        /* Features */
-        .features-grid {
+        /* Card grids */
+        .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 24px;
-            margin-top: 32px;
+            margin-top: 24px;
         }
-        .feature {
+        .card {
             background: var(--white);
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 24px;
         }
-        section:nth-child(even) .feature { background: var(--white); }
-        .feature h3 { margin-bottom: 8px; }
-        .feature p { font-size: 14px; color: var(--dark); margin-bottom: 0; }
+        section:nth-child(even) .card { background: var(--white); }
+        .card h3 { margin-bottom: 8px; }
+        .card p { font-size: 14px; color: var(--dark); margin-bottom: 0; }
+
+        /* Bullet list in sections */
+        .section-bullets { margin: 0 0 24px 20px; }
+        .section-bullets li { margin-bottom: 10px; font-size: 15px; }
 
         /* Code block */
         .code-block {
@@ -130,7 +157,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 24px;
-            margin: 32px 0;
+            margin: 24px 0;
             max-width: 500px;
         }
         .score-card {
@@ -146,44 +173,30 @@
             color: var(--navy);
             line-height: 1;
         }
-        .score-card .score-label {
-            font-size: 14px;
-            color: var(--gray);
-            margin-top: 4px;
-        }
-        .score-card .score-range {
-            font-size: 12px;
-            color: var(--gray);
-            margin-top: 2px;
-        }
+        .score-card .score-label { font-size: 14px; color: var(--gray); margin-top: 4px; }
+        .score-card .score-range { font-size: 12px; color: var(--gray); margin-top: 2px; }
 
-        /* Pilot section */
-        .pilot-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 32px;
-            margin: 32px 0;
+        /* Safety callout */
+        .safety-note {
+            margin-top: 24px;
+            padding: 16px 20px;
+            background: var(--light);
+            border-left: 3px solid var(--primary);
+            border-radius: 0 8px 8px 0;
+            font-size: 14px;
+            color: var(--dark);
         }
-        .pilot-col h3 { margin-bottom: 12px; }
-        .pilot-col ul { margin: 0 0 0 20px; }
-        .pilot-col li { margin-bottom: 8px; font-size: 14px; }
+        section:nth-child(even) .safety-note { background: var(--white); }
 
         /* CTA */
-        .cta-section { text-align: center; padding: 64px 0; background: linear-gradient(135deg, #0A1628 0%, #1E3A5F 50%, #16213e 100%); color: var(--white); }
+        .cta-section {
+            text-align: center;
+            padding: 64px 0;
+            background: linear-gradient(135deg, #0A1628 0%, #1E3A5F 50%, #16213e 100%);
+            color: var(--white);
+        }
         .cta-section h2 { color: var(--white); border-bottom-color: var(--primary); }
         .cta-section p { color: rgba(255,255,255,0.85); max-width: 560px; margin: 16px auto; }
-        .cta-btn {
-            display: inline-block;
-            background: linear-gradient(135deg, #00A6FB 0%, #00D4FF 100%);
-            color: var(--white);
-            padding: 14px 32px;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
-            margin-top: 16px;
-            box-shadow: 0 4px 20px rgba(0, 166, 251, 0.3);
-        }
 
         /* Footer */
         footer {
@@ -198,7 +211,7 @@
         /* Responsive */
         @media (max-width: 640px) {
             header h1 { font-size: 28px; }
-            .pilot-grid { grid-template-columns: 1fr; }
+            .two-col { grid-template-columns: 1fr; }
             .scores-row { grid-template-columns: 1fr; }
             section { padding: 40px 0; }
         }
@@ -206,7 +219,7 @@
 </head>
 <body>
 
-<!-- Header -->
+<!-- 1. Hero -->
 <header>
     <div class="container">
         <div class="brand-row">
@@ -232,145 +245,180 @@
             </svg>
             <div class="brand">Quankey QSA</div>
         </div>
-        <h1>TLS Crypto Hygiene &amp; PQC Readiness Scanner</h1>
-        <p class="subtitle">On-premises tool that assesses your TLS posture and quantifies readiness for Post-Quantum Cryptography. Auditable evidence packs. No data leaves your network.</p>
+        <h1>Quantum-Safe Assurance for your TLS perimeter</h1>
+        <p class="subtitle">Measure crypto hygiene and PQC readiness. On-prem. Evidence you can audit.</p>
+        <ul class="hero-bullets">
+            <li>Discover cipher suite, key exchange, and protocol posture across your TLS endpoints</li>
+            <li>Detect PQC-capable handshakes (hybrid key exchange groups) and quantify your coverage gap</li>
+            <li>Generate repeatable evidence packs and diffs to track configuration drift over time</li>
+        </ul>
+        <div class="hero-actions">
+            <a class="btn-primary" href="mailto:jcano@cainmani.com?subject=QSA%20Pilot%20Inquiry">Request a pilot</a>
+            <a class="btn-secondary" href="#how-it-works">How it works</a>
+        </div>
     </div>
 </header>
 
-<!-- Problem -->
-<section>
+<!-- 2. Problem -->
+<section id="problem">
     <div class="container">
-        <h2>The Problem</h2>
-        <p class="section-intro">Post-quantum cryptography standards are finalized. Migration deadlines are set. Most organizations cannot answer the first question: where do we stand today?</p>
-
-        <div class="stats-row">
-            <div class="stat-card">
-                <div class="number">2030</div>
-                <div class="label">NSA CNSA 2.0 deadline for PQC in network protocols</div>
-                <div class="source">Source: NSA CNSA 2.0 (September 2022)</div>
-            </div>
-            <div class="stat-card">
-                <div class="number">91%</div>
-                <div class="label">Organizations lacking a formal PQC migration roadmap</div>
-                <div class="source">Source: TCG Survey (November 2025)</div>
-            </div>
-            <div class="stat-card">
-                <div class="number">2035</div>
-                <div class="label">NIST deadline to disallow RSA, DH, and ECC</div>
-                <div class="source">Source: NIST IR 8547 (November 2024)</div>
-            </div>
-        </div>
-
-        <p>Before you can plan a migration, you need an inventory. QSA provides that inventory: which cipher suites your endpoints negotiate, whether deprecated protocols are active, and which endpoints already support PQC key exchange.</p>
+        <h2>The problem in practice</h2>
+        <p class="section-intro">NIST has set 2035 as the deadline to disallow RSA, DH, and classical ECC (NIST IR 8547, November 2024). NSA CNSA 2.0 requires PQC in network protocols by 2030. Before you can plan a migration, you need to know where you stand today.</p>
+        <ul class="section-bullets">
+            <li><strong>Inventories are incomplete.</strong> Endpoints sprawl across cloud, on-prem, and partner connections. Most teams cannot produce a current list of what cipher suites and key exchange methods are actually negotiated in production.</li>
+            <li><strong>Configurations drift.</strong> Certificate rotations, vendor updates, and infrastructure changes silently reintroduce weak defaults. A configuration that was strong last quarter may not be strong today.</li>
+            <li><strong>Audit evidence is manual and non-repeatable.</strong> Point-in-time checks with browser tools or ad-hoc scripts produce results that are hard to compare, hard to version, and hard to defend in a review.</li>
+        </ul>
     </div>
 </section>
 
-<!-- What QSA Does -->
-<section>
+<!-- 3. Scope -->
+<section id="scope">
     <div class="container">
-        <h2>What QSA Does</h2>
-        <p class="section-intro">A single binary or Docker container. Point it at your TLS endpoints. Get two scores and an auditable evidence pack.</p>
+        <h2>What QSA does &mdash; and does not do</h2>
+        <p class="section-intro">QSA focuses on TLS perimeter assessment. The scope is deliberately narrow to keep results actionable.</p>
+        <div class="two-col">
+            <div>
+                <h3>In scope</h3>
+                <ul>
+                    <li>Scan host:port targets from your environment</li>
+                    <li>Capture negotiated TLS parameters: protocol version, cipher suite, key exchange group (including PQC hybrid signals)</li>
+                    <li>Classify crypto hygiene and PQC readiness; produce machine-readable JSON output and a self-contained HTML report</li>
+                    <li>Diff successive scans: improved, degraded, or neutral &mdash; with reasons per endpoint</li>
+                </ul>
+            </div>
+            <div>
+                <h3>Not in scope</h3>
+                <ul>
+                    <li>Not a TLS proxy, VPN, or WAF &mdash; QSA is not inline with traffic</li>
+                    <li>Not a PQC migration service &mdash; QSA measures readiness; it does not deploy or configure PQC algorithms</li>
+                    <li>Not SaaS &mdash; runs on your infrastructure with no telemetry by default</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 4. Why it matters -->
+<section id="why-it-matters">
+    <div class="container">
+        <h2>Why it matters</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h3>If you don't measure, you can't prioritize</h3>
+                <p>Without a baseline scan, remediation planning and PQC roadmaps rely on assumptions. Teams debate priorities without data. QSA gives you the inventory to make those calls with evidence.</p>
+            </div>
+            <div class="card">
+                <h3>If you don't track, drift goes unnoticed</h3>
+                <p>Configuration changes, certificate rotations, and vendor updates can silently downgrade your posture. Periodic scans with drift diffs make regressions visible before they become audit findings.</p>
+            </div>
+            <div class="card">
+                <h3>If you can't repeat, audits are expensive</h3>
+                <p>Manual checks are slow, subjective, and hard to compare across time or across teams. Repeatable scans with hash-chain integrity turn posture assessment into a routine operation, not a project.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 5. Our approach -->
+<section id="approach">
+    <div class="container">
+        <h2>Our approach</h2>
+        <div class="card-grid">
+            <div class="card">
+                <h3>On-prem by design</h3>
+                <p>Runs as a static Go binary (~10 MB) or Docker container on your network. No data leaves your environment. Suited for air-gapped and critical infrastructure environments.</p>
+            </div>
+            <div class="card">
+                <h3>Vendor-neutral posture view</h3>
+                <p>Scans any TLS endpoint regardless of the underlying stack. Mixed environments &mdash; cloud, on-prem, legacy &mdash; get a single consistent assessment with the same scoring methodology.</p>
+            </div>
+            <div class="card">
+                <h3>Evidence-first reporting</h3>
+                <p>JSON output with hash-chain integrity (SHA-256). Each evidence pack is reproducible, verifiable, and structured for auditor consumption and compliance review.</p>
+            </div>
+            <div class="card">
+                <h3>Drift diffs for change control</h3>
+                <p>Compare scans to track what changed, in which direction, and why it matters. Built for change advisory boards, periodic review cycles, and continuous posture monitoring.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 6. How it works -->
+<section id="how-it-works">
+    <div class="container">
+        <h2>How it works</h2>
+        <p class="section-intro">Three commands cover the workflow: scan, diff, and verify.</p>
+
+        <div class="code-block">
+            <span class="comment"># 1. Scan endpoints from a target list</span><br>
+            <span class="cmd">qsa scan</span> --targets endpoints.txt --output ./results<br><br>
+            <span class="comment"># 2. Compare scans to track drift</span><br>
+            <span class="cmd">qsa diff</span> baseline.json current.json<br><br>
+            <span class="comment"># 3. Verify evidence pack integrity</span><br>
+            <span class="cmd">qsa verify</span> evidence-pack.json
+        </div>
+
+        <p>Each scan produces two scores and an evidence pack:</p>
 
         <div class="scores-row">
             <div class="score-card">
                 <div class="score-value">79</div>
                 <div class="score-label">Crypto Hygiene</div>
-                <div class="score-range">0 -- 100</div>
+                <div class="score-range">0 &ndash; 100</div>
             </div>
             <div class="score-card">
                 <div class="score-value">40</div>
                 <div class="score-label">PQC Readiness</div>
-                <div class="score-range">0 -- 100</div>
+                <div class="score-range">0 &ndash; 100</div>
             </div>
         </div>
-        <p style="font-size:13px; color:var(--gray);">Sample scores from a scan of 5 public endpoints (February 2026).</p>
+        <p style="font-size:13px; color:var(--gray);">Scores from a scan of 5 public endpoints, February 2026. Hygiene reflects cipher suite and protocol health. PQC Readiness reflects the share of endpoints negotiating post-quantum key exchange.</p>
 
-        <div class="features-grid">
-            <div class="feature">
-                <h3>TLS Scanning</h3>
-                <p>Cipher suites, protocol versions, certificate chain analysis, PQC key exchange (ML-KEM / X25519MLKEM768) detection.</p>
-            </div>
-            <div class="feature">
-                <h3>Evidence Packs</h3>
-                <p>Hash-chain linked JSON output with SHA-256 integrity. Designed for auditor consumption and compliance evidence.</p>
-            </div>
-            <div class="feature">
-                <h3>Drift Detection</h3>
-                <p>Compare scans over time. Track which endpoints improved, regressed, or changed cipher configuration.</p>
-            </div>
-            <div class="feature">
-                <h3>On-Premises</h3>
-                <p>Runs entirely on your network as a ~10 MB Go binary or Docker container. No data leaves your environment. Offline-capable.</p>
-            </div>
-            <div class="feature">
-                <h3>Passive Only</h3>
-                <p>Performs standard TLS handshakes (ClientHello + ServerHello analysis). No exploitation, no active probing beyond TLS negotiation.</p>
-            </div>
-            <div class="feature">
-                <h3>Configurable Rules</h3>
-                <p>YAML-based classification rules. Override scoring thresholds to match your organization's risk appetite.</p>
-            </div>
-        </div>
+        <p>Output includes a self-contained HTML report with endpoint inventory, per-endpoint findings, scoring rationale, and classification details. The JSON evidence pack preserves hash-chain integrity for audit trails.</p>
     </div>
 </section>
 
-<!-- How It Works -->
-<section>
+<!-- 7. Pilot -->
+<section id="pilot">
     <div class="container">
-        <h2>How It Works</h2>
-        <p class="section-intro">Three commands cover the entire workflow: scan, compare, and verify.</p>
+        <h2>Pilot program</h2>
+        <p class="section-intro">Two-week engagement: baseline scan plus one follow-up diff. No cost during the pilot period.</p>
 
-        <div class="code-block">
-            <span class="comment"># Scan endpoints from a target list</span><br>
-            <span class="cmd">qsa scan</span> --targets endpoints.txt --output ./results<br><br>
-            <span class="comment"># Compare two scans for drift over time</span><br>
-            <span class="cmd">qsa diff</span> baseline.json current.json<br><br>
-            <span class="comment"># Verify evidence pack hash-chain integrity</span><br>
-            <span class="cmd">qsa verify</span> evidence-pack.json<br><br>
-            <span class="comment"># Run from Docker (no installation needed)</span><br>
-            <span class="cmd">docker run</span> --rm qsa scan host.example.com:443
-        </div>
-
-        <p>Output includes a self-contained HTML report with endpoint inventory, findings, scores, and classification rationale. The JSON evidence pack preserves full hash-chain integrity for audit trails.</p>
-    </div>
-</section>
-
-<!-- Free Pilot -->
-<section>
-    <div class="container">
-        <h2>Free Pilot Program</h2>
-        <p class="section-intro">We offer a free 2-4 week pilot for organizations with 100+ TLS endpoints and an active compliance program.</p>
-
-        <div class="pilot-grid">
-            <div class="pilot-col">
+        <div class="two-col">
+            <div>
                 <h3>What you provide</h3>
                 <ul>
-                    <li>A list of TLS endpoints to scan</li>
-                    <li>A Docker-capable host on your network</li>
-                    <li>~2 hours of your time (kickoff, check-in, exit interview)</li>
+                    <li>A list of TLS endpoints to scan (host:port)</li>
+                    <li>A Docker-capable host on your network (or we provide a static binary)</li>
+                    <li>~30 minutes with your security or GRC team for kickoff and results review</li>
                 </ul>
             </div>
-            <div class="pilot-col">
+            <div>
                 <h3>What you receive</h3>
                 <ul>
-                    <li>Initial scan with evidence pack (JSON + HTML report)</li>
+                    <li>Baseline scan with evidence pack (JSON + HTML report)</li>
                     <li>Follow-up scan with drift comparison</li>
-                    <li>PQC readiness assessment and recommendations</li>
+                    <li>Prioritized findings and posture scorecards</li>
+                    <li>Next-step recommendations based on your results</li>
                     <li>All data stays on your infrastructure</li>
                 </ul>
             </div>
         </div>
 
-        <p><strong>Qualification criteria:</strong> 100+ TLS endpoints under management, active compliance program (ISO 27001, SOC 2, PCI-DSS, or sector-specific), CISO or security team in place.</p>
+        <div class="safety-note">
+            <strong>Passive scanning only.</strong> QSA performs standard TLS handshakes (ClientHello + ServerHello analysis). No traffic interception, no exploitation, no active probing beyond TLS negotiation.
+        </div>
     </div>
 </section>
 
-<!-- CTA -->
+<!-- 8. CTA -->
 <div class="cta-section">
     <div class="container">
-        <h2>Request a Pilot</h2>
+        <h2>Request a pilot</h2>
         <p>Find out where your TLS infrastructure stands on crypto hygiene and PQC readiness. No cost, no commitment, no data leaves your network.</p>
-        <a class="cta-btn" href="mailto:jcano@cainmani.com?subject=QSA%20Pilot%20Inquiry">Contact Us</a>
+        <a class="btn-primary" href="mailto:jcano@cainmani.com?subject=QSA%20Pilot%20Inquiry">Contact us</a>
         <p style="font-size:13px; margin-top:12px; color:rgba(255,255,255,0.6);">jcano@cainmani.com</p>
     </div>
 </div>
@@ -378,8 +426,9 @@
 <!-- Footer -->
 <footer>
     <div class="container">
-        <p>Quankey QSA is developed by Quankey. QSA performs passive TLS handshake analysis only. It does not exploit vulnerabilities, manage certificates, or implement PQC algorithms. All claims reference published standards and cited research.</p>
-        <p class="standards">Standards referenced: NIST FIPS 203/204/205 (August 2024), NSA CNSA 2.0 (September 2022), NIST IR 8547 (November 2024), OMB M-23-02, EU Cyber Resilience Act, PCI-DSS v4.0</p>
+        <p>Quankey QSA &mdash; TLS posture assurance and PQC readiness measurement. QSA performs passive TLS handshake analysis only. It does not exploit vulnerabilities, manage certificates, or implement PQC algorithms.</p>
+        <p style="margin-top:8px;"><a href="mailto:jcano@cainmani.com">Contact</a> &nbsp;&middot;&nbsp; <a href="https://github.com/JCQuankey/quankey-qsa-landing/blob/main/SECURITY.md">Responsible disclosure</a></p>
+        <p class="standards">Standards referenced: NIST FIPS 203/204/205 (August 2024), NSA CNSA 2.0 (September 2022), NIST IR 8547 (November 2024), PCI-DSS v4.0</p>
     </div>
 </footer>
 

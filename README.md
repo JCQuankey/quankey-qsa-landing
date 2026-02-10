@@ -19,6 +19,11 @@ This repository contains only the static landing page for QSA. It is served via 
 
 For pilot program inquiries: **jcano@cainmani.com**
 
+## Changelog
+
+- **2026-02-10**: Rewritten landing page -- 8 sections (hero, problem, scope, why it matters, approach, how it works, pilot, CTA). Dropped unverifiable stats, added inline NIST/NSA citations, explicit out-of-scope wedge, safety callout, responsible disclosure link.
+- **2026-02-10**: Initial publish -- 7-section landing page, Quankey brand, GitHub Pages.
+
 ## License
 
 Website content is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
