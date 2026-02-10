@@ -21,7 +21,8 @@ For pilot program inquiries: **jcano@cainmani.com**
 
 ## Changelog
 
-- **2026-02-10**: Rewritten landing page -- 8 sections (hero, problem, scope, why it matters, approach, how it works, pilot, CTA). Dropped unverifiable stats, added inline NIST/NSA citations, explicit out-of-scope wedge, safety callout, responsible disclosure link.
+- **2026-02-10 (G9)**: Full visual redesign -- dark theme, hex pattern, glass-morphism cards, fixed nav, SVG hex icons, terminal code block, WCAG-accessible buttons, prefers-reduced-motion. See `docs/DESIGN/G9_CHANGELOG.md`.
+- **2026-02-10**: Rewritten landing page -- 8 sections with inline NIST/NSA citations, explicit scope wedge, safety callout, responsible disclosure link.
 - **2026-02-10**: Initial publish -- 7-section landing page, Quankey brand, GitHub Pages.
 
 ## License

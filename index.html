@@ -4,363 +4,701 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quankey QSA - Quantum-Safe Assurance for your TLS Perimeter</title>
-    <meta name="description" content="On-premises TLS crypto hygiene assessment and PQC readiness scoring. Repeatable evidence packs. No data leaves your network.">
+    <meta name="description" content="On-premises TLS crypto hygiene assessment and PQC readiness scoring. Repeatable evidence packs with hash-chain integrity. No data leaves your network.">
     <meta name="robots" content="index, follow">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
+        /* ===== TOKENS (from Quankey Brand System v2.0) ===== */
         :root {
-            --primary: #00A6FB;
-            --cyan: #00D4FF;
-            --dark: #0A1628;
-            --navy: #1E3A5F;
-            --white: #FFFFFF;
-            --light: #F0F4F8;
-            --gray: #8B8CA5;
-            --border: #E8E8F0;
+            --q-primary: #00A6FB;
+            --q-cyan: #00D4FF;
+            --q-dark: #0A1628;
+            --q-navy: #1E3A5F;
+            --q-white: #FFFFFF;
+            --q-gray-light: #E8E8F0;
+            --q-gray: #8B8CA5;
+            --q-surface: rgba(30, 58, 95, 0.45);
+            --q-border: rgba(0, 166, 251, 0.15);
+            --q-border-hover: rgba(0, 166, 251, 0.35);
+            --q-gradient: linear-gradient(135deg, #00A6FB 0%, #00D4FF 100%);
+            --q-gradient-bg: linear-gradient(135deg, #0A1628 0%, #1E3A5F 50%, #16213e 100%);
+            --q-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --q-mono: 'JetBrains Mono', 'Monaco', 'Menlo', monospace;
+            --q-radius: 12px;
+            --q-radius-sm: 8px;
+            /* Accessible button color: #0077CC on white = 4.78:1 (AA pass) */
+            --q-btn: #0077CC;
+            --q-btn-hover: #008AE6;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* ===== RESET ===== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* ===== BODY + HEX PATTERN ===== */
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            color: var(--dark);
-            background: var(--white);
-            line-height: 1.6;
+            font-family: var(--q-font);
+            color: var(--q-gray-light);
+            background: var(--q-dark);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100'%3E%3Cpath d='M28 66L0 50V16L28 0l28 16v34L28 66zM28 100L0 84V50l28-16 28 16v34L28 100z' fill='none' stroke='%2300A6FB' stroke-width='0.5'/%3E%3C/svg%3E");
+            background-size: 56px 100px;
         }
 
-        /* Layout */
-        .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
-        section { padding: 64px 0; }
-        section:nth-child(even) { background: var(--light); }
-
-        /* Header / Hero */
-        header {
-            background: linear-gradient(135deg, #0A1628 0%, #1E3A5F 50%, #16213e 100%);
-            color: var(--white);
-            padding: 48px 0;
-            border-bottom: 4px solid var(--primary);
+        /* ===== SKIP LINK (a11y) ===== */
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 16px;
+            background: var(--q-btn);
+            color: var(--q-white);
+            padding: 8px 16px;
+            border-radius: var(--q-radius-sm);
+            z-index: 1000;
+            font-size: 14px;
+            text-decoration: none;
         }
-        header .brand-row {
+        .skip-link:focus { top: 16px; }
+
+        /* ===== LAYOUT ===== */
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 1; }
+        section { padding: 96px 0; position: relative; }
+        section + section { border-top: 1px solid var(--q-border); }
+
+        /* ===== NAV ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(10, 22, 40, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--q-border);
+            padding: 0 32px;
+        }
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
+            height: 64px;
+            gap: 32px;
         }
-        header .brand-icon { width: 36px; height: 36px; flex-shrink: 0; }
-        header .brand { font-size: 14px; letter-spacing: 2px; text-transform: uppercase; color: var(--primary); }
-        header h1 { font-size: 36px; font-weight: 700; line-height: 1.2; margin-bottom: 12px; }
-        header .subtitle { font-size: 18px; color: rgba(255,255,255,0.85); max-width: 640px; margin-bottom: 20px; }
-        header .hero-bullets { list-style: none; margin-bottom: 28px; max-width: 640px; }
-        header .hero-bullets li {
-            padding: 6px 0 6px 20px;
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+        .nav-logo svg { width: 32px; height: 32px; flex-shrink: 0; }
+        .nav-wordmark {
+            font-size: 18px;
+            font-weight: 700;
+            background: var(--q-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.5px;
+        }
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+            margin-left: auto;
+        }
+        .nav-links a {
+            color: var(--q-gray);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover, .nav-links a:focus { color: var(--q-white); }
+        .nav-cta {
+            margin-left: 12px;
+            background: var(--q-btn);
+            color: var(--q-white);
+            padding: 8px 20px;
+            border-radius: var(--q-radius-sm);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s, box-shadow 0.2s;
+            flex-shrink: 0;
+        }
+        .nav-cta:hover {
+            background: var(--q-btn-hover);
+            box-shadow: 0 4px 16px rgba(0, 119, 204, 0.4);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            padding: 160px 0 96px;
+            border-top: none;
+            border-bottom: none;
+        }
+        .hero + section { border-top: 1px solid var(--q-border); }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(0, 166, 251, 0.08);
+            border: 1px solid var(--q-border);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--q-primary);
+            margin-bottom: 24px;
+            font-family: var(--q-mono);
+        }
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 52px);
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            max-width: 720px;
+            color: var(--q-white);
+        }
+        .hero h1 .gradient-text {
+            background: var(--q-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-sub {
+            font-size: 18px;
+            color: var(--q-gray);
+            max-width: 600px;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+        .hero-bullets {
+            list-style: none;
+            margin-bottom: 40px;
+            max-width: 640px;
+        }
+        .hero-bullets li {
+            padding: 8px 0 8px 28px;
             position: relative;
             font-size: 15px;
-            color: rgba(255,255,255,0.9);
+            color: rgba(232, 232, 240, 0.85);
         }
-        header .hero-bullets li::before {
+        .hero-bullets li::before {
             content: '';
             position: absolute;
             left: 0;
-            top: 14px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--primary);
+            top: 16px;
+            width: 12px;
+            height: 12px;
+            background: var(--q-gradient);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
         }
-        header .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+        .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
 
-        /* Buttons */
+        /* ===== BUTTONS ===== */
         .btn-primary {
             display: inline-block;
-            background: linear-gradient(135deg, #00A6FB 0%, #00D4FF 100%);
-            color: var(--white);
-            padding: 14px 28px;
+            background: var(--q-btn);
+            color: var(--q-white);
+            padding: 14px 32px;
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: var(--q-radius);
             font-weight: 600;
-            font-size: 15px;
-            box-shadow: 0 4px 20px rgba(0, 166, 251, 0.3);
+            font-size: 16px;
+            transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+            box-shadow: 0 4px 20px rgba(0, 119, 204, 0.3);
+        }
+        .btn-primary:hover, .btn-primary:focus {
+            background: var(--q-btn-hover);
+            box-shadow: 0 8px 32px rgba(0, 138, 230, 0.4);
+            transform: translateY(-1px);
         }
         .btn-secondary {
             display: inline-block;
-            color: var(--white);
-            padding: 14px 28px;
+            color: var(--q-gray-light);
+            padding: 14px 32px;
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: var(--q-radius);
             font-weight: 500;
-            font-size: 15px;
-            border: 1px solid rgba(255,255,255,0.3);
+            font-size: 16px;
+            border: 1px solid rgba(232, 232, 240, 0.2);
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .btn-secondary:hover, .btn-secondary:focus {
+            border-color: var(--q-primary);
+            color: var(--q-white);
         }
 
-        /* Typography */
-        h2 {
-            font-size: 24px;
-            color: var(--navy);
+        /* ===== FOCUS RING (a11y) ===== */
+        :focus-visible {
+            outline: 2px solid var(--q-primary);
+            outline-offset: 2px;
+        }
+
+        /* ===== TYPOGRAPHY ===== */
+        .section-label {
+            font-family: var(--q-mono);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--q-primary);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
             margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 3px solid var(--primary);
-            display: inline-block;
         }
-        h3 { font-size: 18px; color: var(--navy); margin-bottom: 8px; }
-        p { margin-bottom: 16px; }
-        .section-intro { font-size: 18px; color: var(--dark); margin-bottom: 32px; max-width: 720px; }
+        h2 {
+            font-size: clamp(24px, 3vw, 32px);
+            color: var(--q-white);
+            margin-bottom: 16px;
+            font-weight: 700;
+            line-height: 1.25;
+        }
+        .section-intro {
+            font-size: 17px;
+            color: var(--q-gray);
+            margin-bottom: 48px;
+            max-width: 680px;
+            line-height: 1.7;
+        }
+        h3 { font-size: 18px; color: var(--q-white); margin-bottom: 8px; font-weight: 600; }
 
-        /* Two-column grid (scope, pilot) */
+        /* ===== CARDS ===== */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        .card {
+            background: var(--q-surface);
+            border: 1px solid var(--q-border);
+            border-radius: var(--q-radius);
+            padding: 32px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: border-color 0.25s, box-shadow 0.25s;
+        }
+        .card:hover {
+            border-color: var(--q-border-hover);
+            box-shadow: 0 8px 32px rgba(0, 166, 251, 0.08);
+        }
+        .card p { font-size: 14px; color: var(--q-gray); line-height: 1.7; margin: 0; }
+        .card h3 { margin-bottom: 12px; }
+
+        /* ===== HEX ICON ===== */
+        .hex-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 16px;
+            color: var(--q-primary);
+        }
+        .hex-frame { fill: rgba(0, 166, 251, 0.08); stroke: rgba(0, 166, 251, 0.25); stroke-width: 1; }
+
+        /* ===== TWO COLUMNS ===== */
         .two-col {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 32px;
-            margin: 24px 0;
+            gap: 48px;
         }
-        .two-col h3 { margin-bottom: 12px; }
-        .two-col ul { margin: 0 0 0 20px; }
-        .two-col li { margin-bottom: 10px; font-size: 14px; line-height: 1.5; }
+        .col-in, .col-out {
+            background: var(--q-surface);
+            border: 1px solid var(--q-border);
+            border-radius: var(--q-radius);
+            padding: 32px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .col-in { border-top: 3px solid var(--q-primary); }
+        .col-out { border-top: 3px solid var(--q-gray); }
+        .col-in h3 { color: var(--q-primary); }
+        .col-in ul, .col-out ul { margin: 0 0 0 18px; }
+        .col-in li, .col-out li { margin-bottom: 12px; font-size: 14px; line-height: 1.6; color: var(--q-gray-light); }
+        .col-out li { color: var(--q-gray); }
 
-        /* Card grids */
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 24px;
-            margin-top: 24px;
+        /* ===== TERMINAL CODE BLOCK ===== */
+        .terminal {
+            background: #0D1B2A;
+            border: 1px solid var(--q-border);
+            border-radius: var(--q-radius);
+            overflow: hidden;
+            margin: 32px 0;
         }
-        .card {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 8px;
+        .terminal-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--q-border);
+        }
+        .terminal-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(139, 140, 165, 0.3);
+        }
+        .terminal-title {
+            font-family: var(--q-mono);
+            font-size: 12px;
+            color: var(--q-gray);
+            margin-left: 8px;
+        }
+        .terminal-body {
             padding: 24px;
-        }
-        section:nth-child(even) .card { background: var(--white); }
-        .card h3 { margin-bottom: 8px; }
-        .card p { font-size: 14px; color: var(--dark); margin-bottom: 0; }
-
-        /* Bullet list in sections */
-        .section-bullets { margin: 0 0 24px 20px; }
-        .section-bullets li { margin-bottom: 10px; font-size: 15px; }
-
-        /* Code block */
-        .code-block {
-            background: var(--dark);
-            color: #E8E8F0;
-            padding: 24px;
-            border-radius: 8px;
-            font-family: 'JetBrains Mono', 'Monaco', 'Menlo', monospace;
+            font-family: var(--q-mono);
             font-size: 14px;
-            line-height: 1.8;
+            line-height: 2;
             overflow-x: auto;
-            margin: 24px 0;
         }
-        .code-block .comment { color: var(--gray); }
-        .code-block .cmd { color: var(--cyan); }
+        .terminal-body .comment { color: var(--q-gray); }
+        .terminal-body .cmd { color: var(--q-cyan); font-weight: 500; }
+        .terminal-body .flag { color: var(--q-primary); }
+        .terminal-body .prompt { color: var(--q-gray); user-select: none; }
 
-        /* Scores preview */
+        /* ===== SCORE INSTRUMENTS ===== */
         .scores-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 24px;
-            margin: 24px 0;
-            max-width: 500px;
+            max-width: 480px;
+            margin: 32px 0;
         }
         .score-card {
             text-align: center;
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 24px;
+            background: var(--q-surface);
+            border: 1px solid var(--q-border);
+            border-radius: var(--q-radius);
+            padding: 28px 24px;
+            position: relative;
+            overflow: hidden;
         }
-        .score-card .score-value {
+        .score-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--q-gradient);
+        }
+        .score-value {
             font-size: 48px;
             font-weight: 700;
-            color: var(--navy);
+            font-family: var(--q-mono);
+            background: var(--q-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             line-height: 1;
         }
-        .score-card .score-label { font-size: 14px; color: var(--gray); margin-top: 4px; }
-        .score-card .score-range { font-size: 12px; color: var(--gray); margin-top: 2px; }
-
-        /* Safety callout */
-        .safety-note {
-            margin-top: 24px;
-            padding: 16px 20px;
-            background: var(--light);
-            border-left: 3px solid var(--primary);
-            border-radius: 0 8px 8px 0;
+        .score-label {
             font-size: 14px;
-            color: var(--dark);
+            color: var(--q-gray-light);
+            margin-top: 8px;
+            font-weight: 500;
         }
-        section:nth-child(even) .safety-note { background: var(--white); }
+        .score-range { font-size: 12px; color: var(--q-gray); margin-top: 4px; }
+        .score-note {
+            font-size: 13px;
+            color: var(--q-gray);
+            margin-top: 8px;
+            max-width: 560px;
+        }
 
-        /* CTA */
+        /* ===== SAFETY CALLOUT ===== */
+        .callout {
+            margin-top: 32px;
+            padding: 20px 24px;
+            background: rgba(0, 166, 251, 0.05);
+            border-left: 3px solid var(--q-primary);
+            border-radius: 0 var(--q-radius-sm) var(--q-radius-sm) 0;
+            font-size: 14px;
+            color: var(--q-gray-light);
+        }
+        .callout strong { color: var(--q-white); }
+
+        /* ===== CTA SECTION ===== */
         .cta-section {
             text-align: center;
-            padding: 64px 0;
-            background: linear-gradient(135deg, #0A1628 0%, #1E3A5F 50%, #16213e 100%);
-            color: var(--white);
+            padding: 96px 0;
+            position: relative;
         }
-        .cta-section h2 { color: var(--white); border-bottom-color: var(--primary); }
-        .cta-section p { color: rgba(255,255,255,0.85); max-width: 560px; margin: 16px auto; }
+        .cta-section .section-label { margin-bottom: 16px; }
+        .cta-section h2 { margin-bottom: 16px; }
+        .cta-section p { color: var(--q-gray); max-width: 520px; margin: 0 auto 32px; }
+        .cta-email {
+            display: block;
+            font-family: var(--q-mono);
+            font-size: 14px;
+            color: var(--q-gray);
+            margin-top: 16px;
+        }
 
-        /* Footer */
+        /* ===== FOOTER ===== */
         footer {
-            background: var(--dark);
-            color: rgba(255,255,255,0.7);
-            padding: 32px 0;
+            border-top: 1px solid var(--q-border);
+            padding: 40px 0;
             font-size: 13px;
+            color: var(--q-gray);
+            position: relative;
+            z-index: 1;
         }
-        footer a { color: var(--primary); text-decoration: none; }
-        footer .standards { margin-top: 12px; font-size: 11px; color: rgba(255,255,255,0.5); }
+        footer a { color: var(--q-primary); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+        .footer-links { margin-top: 12px; display: flex; gap: 20px; flex-wrap: wrap; }
+        .footer-standards { margin-top: 16px; font-size: 11px; color: rgba(139, 140, 165, 0.6); }
 
-        /* Responsive */
-        @media (max-width: 640px) {
-            header h1 { font-size: 28px; }
-            .two-col { grid-template-columns: 1fr; }
-            .scores-row { grid-template-columns: 1fr; }
-            section { padding: 40px 0; }
+        /* ===== QUANTUM PULSE (very subtle) ===== */
+        .pulse-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--q-mono);
+            font-size: 12px;
+            color: var(--q-primary);
+            padding: 4px 12px;
+            background: rgba(0, 166, 251, 0.06);
+            border: 1px solid rgba(0, 166, 251, 0.2);
+            border-radius: 4px;
+            margin-top: 12px;
+        }
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--q-primary);
+            animation: pulse 2.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0, 166, 251, 0.6); }
+            50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(0, 166, 251, 0); }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .container { padding: 0 20px; }
+            section { padding: 64px 0; }
+            .hero { padding: 120px 0 64px; }
+            .nav-links { display: none; }
+            .two-col { grid-template-columns: 1fr; gap: 20px; }
+            .scores-row { grid-template-columns: 1fr 1fr; max-width: 100%; }
+            .card-grid { grid-template-columns: 1fr; }
+            .hero-actions { flex-direction: column; align-items: flex-start; }
+            .btn-primary, .btn-secondary { width: 100%; text-align: center; }
+        }
+
+        /* ===== REDUCED MOTION ===== */
+        @media (prefers-reduced-motion: reduce) {
+            .pulse-dot { animation: none; opacity: 1; }
+            .btn-primary, .btn-secondary, .card, .nav-cta, .nav-links a { transition: none; }
         }
     </style>
 </head>
 <body>
 
-<!-- 1. Hero -->
-<header>
-    <div class="container">
-        <div class="brand-row">
-            <svg class="brand-icon" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="qkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#00A6FB" />
-                        <stop offset="100%" style="stop-color:#00D4FF" />
-                    </linearGradient>
-                </defs>
-                <g transform="translate(60, 58)">
-                    <path d="M 0,-18 A 18,18 0 0,1 18,0" stroke="url(#qkGrad)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-                    <path d="M 0,-26 A 26,26 0 0,1 26,0" stroke="url(#qkGrad)" stroke-width="3" fill="none" opacity="0.75" stroke-linecap="round"/>
-                    <path d="M 0,-34 A 34,34 0 0,1 34,0" stroke="url(#qkGrad)" stroke-width="2.5" fill="none" opacity="0.5" stroke-linecap="round"/>
-                    <path d="M 0,-18 A 18,18 0 0,0 -18,0" stroke="url(#qkGrad)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-                    <path d="M 0,-26 A 26,26 0 0,0 -26,0" stroke="url(#qkGrad)" stroke-width="3" fill="none" opacity="0.75" stroke-linecap="round"/>
-                    <path d="M 0,-34 A 34,34 0 0,0 -34,0" stroke="url(#qkGrad)" stroke-width="2.5" fill="none" opacity="0.5" stroke-linecap="round"/>
-                    <circle cx="0" cy="0" r="6" fill="url(#qkGrad)"/>
-                    <rect x="-3" y="6" width="6" height="18" fill="url(#qkGrad)"/>
-                    <rect x="-3" y="20" width="3" height="4" fill="url(#qkGrad)"/>
-                    <rect x="1.5" y="19" width="3" height="5" fill="url(#qkGrad)"/>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<!-- NAV -->
+<nav aria-label="Main navigation">
+    <div class="nav-inner">
+        <a href="#" class="nav-logo" aria-label="Quankey QSA home">
+            <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <defs><linearGradient id="ng" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00A6FB"/><stop offset="100%" stop-color="#00D4FF"/></linearGradient></defs>
+                <g transform="translate(60,58) scale(0.85)">
+                    <path d="M0,-18A18,18 0 0,1 18,0" stroke="url(#ng)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                    <path d="M0,-26A26,26 0 0,1 26,0" stroke="url(#ng)" stroke-width="3" fill="none" opacity="0.7" stroke-linecap="round"/>
+                    <path d="M0,-34A34,34 0 0,1 34,0" stroke="url(#ng)" stroke-width="2.5" fill="none" opacity="0.45" stroke-linecap="round"/>
+                    <path d="M0,-18A18,18 0 0,0-18,0" stroke="url(#ng)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                    <path d="M0,-26A26,26 0 0,0-26,0" stroke="url(#ng)" stroke-width="3" fill="none" opacity="0.7" stroke-linecap="round"/>
+                    <path d="M0,-34A34,34 0 0,0-34,0" stroke="url(#ng)" stroke-width="2.5" fill="none" opacity="0.45" stroke-linecap="round"/>
+                    <circle cx="0" cy="0" r="6" fill="url(#ng)"/>
+                    <rect x="-3" y="6" width="6" height="18" fill="url(#ng)"/>
+                    <rect x="-3" y="20" width="3" height="4" fill="url(#ng)"/>
+                    <rect x="1.5" y="19" width="3" height="5" fill="url(#ng)"/>
                 </g>
             </svg>
-            <div class="brand">Quankey QSA</div>
+            <span class="nav-wordmark">QUANKEY</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#problem">Problem</a></li>
+            <li><a href="#scope">Scope</a></li>
+            <li><a href="#how-it-works">How it works</a></li>
+            <li><a href="#pilot">Pilot</a></li>
+        </ul>
+        <a class="nav-cta" href="mailto:jcano@cainmani.com?subject=QSA%20Pilot%20Inquiry">Request a pilot</a>
+    </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main id="main">
+
+<!-- 1. HERO -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-badge">
+            <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><polygon points="7,0 14,3.5 14,10.5 7,14 0,10.5 0,3.5" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+            Quantum-Safe Assurance
         </div>
-        <h1>Quantum-Safe Assurance for your TLS perimeter</h1>
-        <p class="subtitle">Measure crypto hygiene and PQC readiness. On-prem. Evidence you can audit.</p>
+        <h1>Measure your <span class="gradient-text">TLS crypto posture</span> and PQC readiness</h1>
+        <p class="hero-sub">On-premises scanner that produces auditable evidence packs. Detect configuration drift. Quantify post-quantum coverage. No data leaves your network.</p>
         <ul class="hero-bullets">
             <li>Discover cipher suite, key exchange, and protocol posture across your TLS endpoints</li>
-            <li>Detect PQC-capable handshakes (hybrid key exchange groups) and quantify your coverage gap</li>
-            <li>Generate repeatable evidence packs and diffs to track configuration drift over time</li>
+            <li>Detect PQC-capable handshakes and quantify your coverage gap</li>
+            <li>Generate repeatable evidence packs and diffs to track configuration drift</li>
         </ul>
         <div class="hero-actions">
             <a class="btn-primary" href="mailto:jcano@cainmani.com?subject=QSA%20Pilot%20Inquiry">Request a pilot</a>
             <a class="btn-secondary" href="#how-it-works">How it works</a>
         </div>
     </div>
-</header>
+</section>
 
-<!-- 2. Problem -->
+<!-- 2. PROBLEM -->
 <section id="problem">
     <div class="container">
-        <h2>The problem in practice</h2>
-        <p class="section-intro">NIST has set 2035 as the deadline to disallow RSA, DH, and classical ECC (NIST IR 8547, November 2024). NSA CNSA 2.0 requires PQC in network protocols by 2030. Before you can plan a migration, you need to know where you stand today.</p>
-        <ul class="section-bullets">
-            <li><strong>Inventories are incomplete.</strong> Endpoints sprawl across cloud, on-prem, and partner connections. Most teams cannot produce a current list of what cipher suites and key exchange methods are actually negotiated in production.</li>
-            <li><strong>Configurations drift.</strong> Certificate rotations, vendor updates, and infrastructure changes silently reintroduce weak defaults. A configuration that was strong last quarter may not be strong today.</li>
-            <li><strong>Audit evidence is manual and non-repeatable.</strong> Point-in-time checks with browser tools or ad-hoc scripts produce results that are hard to compare, hard to version, and hard to defend in a review.</li>
-        </ul>
+        <div class="section-label">The problem</div>
+        <h2>Crypto posture is invisible until you measure it</h2>
+        <p class="section-intro">NIST has set 2035 as the deadline to disallow classical key exchange (IR 8547, November 2024). NSA CNSA 2.0 requires PQC in network protocols by 2030. Before you plan a migration, you need to know where you stand.</p>
+        <div class="card-grid">
+            <div class="card">
+                <svg class="hex-icon" viewBox="0 0 48 48" aria-hidden="true"><path class="hex-frame" d="M24 4L42 14v20L24 44 6 34V14z"/><path d="M16 24h16M24 16v16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><circle cx="24" cy="24" r="9" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                <h3>Inventories are incomplete</h3>
+                <p>Endpoints sprawl across cloud, on-prem, and partner connections. Most teams cannot produce a current list of what cipher suites and key exchange methods are actually negotiated in production.</p>
+            </div>
+            <div class="card">
+                <svg class="hex-icon" viewBox="0 0 48 48" aria-hidden="true"><path class="hex-frame" d="M24 4L42 14v20L24 44 6 34V14z"/><path d="M16 20l4 4-4 4M24 20l4 4-4 4M32 20l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <h3>Configurations drift</h3>
+                <p>Certificate rotations, vendor updates, and infrastructure changes silently reintroduce weak defaults. A configuration that was strong last quarter may not be strong today.</p>
+            </div>
+            <div class="card">
+                <svg class="hex-icon" viewBox="0 0 48 48" aria-hidden="true"><path class="hex-frame" d="M24 4L42 14v20L24 44 6 34V14z"/><path d="M17 18h14M17 24h14M17 30h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><rect x="15" y="13" width="18" height="22" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                <h3>Audit evidence is manual</h3>
+                <p>Point-in-time checks with browser tools or ad-hoc scripts produce results that are hard to compare, hard to version, and hard to defend in a review.</p>
+            </div>
+        </div>
     </div>
 </section>
 
-<!-- 3. Scope -->
+<!-- 3. SCOPE -->
 <section id="scope">
     <div class="container">
+        <div class="section-label">Scope</div>
         <h2>What QSA does &mdash; and does not do</h2>
         <p class="section-intro">QSA focuses on TLS perimeter assessment. The scope is deliberately narrow to keep results actionable.</p>
         <div class="two-col">
-            <div>
+            <div class="col-in">
                 <h3>In scope</h3>
                 <ul>
                     <li>Scan host:port targets from your environment</li>
                     <li>Capture negotiated TLS parameters: protocol version, cipher suite, key exchange group (including PQC hybrid signals)</li>
-                    <li>Classify crypto hygiene and PQC readiness; produce machine-readable JSON output and a self-contained HTML report</li>
+                    <li>Classify crypto hygiene and PQC readiness; produce machine-readable JSON output and an HTML report</li>
                     <li>Diff successive scans: improved, degraded, or neutral &mdash; with reasons per endpoint</li>
                 </ul>
             </div>
-            <div>
+            <div class="col-out">
                 <h3>Not in scope</h3>
                 <ul>
                     <li>Not a TLS proxy, VPN, or WAF &mdash; QSA is not inline with traffic</li>
-                    <li>Not a PQC migration service &mdash; QSA measures readiness; it does not deploy or configure PQC algorithms</li>
-                    <li>Not SaaS &mdash; runs on your infrastructure with no telemetry by default</li>
+                    <li>Not a PQC migration service &mdash; QSA measures readiness; it does not deploy PQC algorithms</li>
+                    <li>Not SaaS &mdash; runs on your infrastructure with no telemetry</li>
                 </ul>
             </div>
         </div>
     </div>
 </section>
 
-<!-- 4. Why it matters -->
+<!-- 4. WHY IT MATTERS -->
 <section id="why-it-matters">
     <div class="container">
-        <h2>Why it matters</h2>
+        <div class="section-label">Why it matters</div>
+        <h2>What happens when you don't measure</h2>
         <div class="card-grid">
             <div class="card">
-                <h3>If you don't measure, you can't prioritize</h3>
-                <p>Without a baseline scan, remediation planning and PQC roadmaps rely on assumptions. Teams debate priorities without data. QSA gives you the inventory to make those calls with evidence.</p>
+                <svg class="hex-icon" viewBox="0 0 48 48" aria-hidden="true"><path class="hex-frame" d="M24 4L42 14v20L24 44 6 34V14z"/><path d="M24 16v10l6 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><circle cx="24" cy="24" r="10" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                <h3>You can't prioritize</h3>
+                <p>Without a baseline scan, remediation planning and PQC roadmaps rely on assumptions. QSA gives you the inventory to make those calls with evidence.</p>
             </div>
             <div class="card">
-                <h3>If you don't track, drift goes unnoticed</h3>
-                <p>Configuration changes, certificate rotations, and vendor updates can silently downgrade your posture. Periodic scans with drift diffs make regressions visible before they become audit findings.</p>
+                <svg class="hex-icon" viewBox="0 0 48 48" aria-hidden="true"><path class="hex-frame" d="M24 4L42 14v20L24 44 6 34V14z"/><path d="M18 28l4-12h4l4 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M19 25h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
+                <h3>Drift goes unnoticed</h3>
+                <p>Configuration changes silently downgrade your posture. Periodic scans with drift diffs make regressions visible before they become audit findings.</p>
             </div>
             <div class="card">
-                <h3>If you can't repeat, audits are expensive</h3>
-                <p>Manual checks are slow, subjective, and hard to compare across time or across teams. Repeatable scans with hash-chain integrity turn posture assessment into a routine operation, not a project.</p>
+                <svg class="hex-icon" viewBox="0 0 48 48" aria-hidden="true"><path class="hex-frame" d="M24 4L42 14v20L24 44 6 34V14z"/><path d="M18 16v16h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M22 28l4-6 4 3 4-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+                <h3>Audits are expensive</h3>
+                <p>Manual checks are slow, subjective, and hard to compare across time. Repeatable scans with hash-chain integrity turn posture assessment into a routine operation.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- 5. Our approach -->
+<!-- 5. OUR APPROACH -->
 <section id="approach">
     <div class="container">
-        <h2>Our approach</h2>
+        <div class="section-label">Our approach</div>
+        <h2>How QSA is built</h2>
         <div class="card-grid">
             <div class="card">
+                <svg class="hex-icon" viewBox="0 0 48 48" aria-hidden="true"><path class="hex-frame" d="M24 4L42 14v20L24 44 6 34V14z"/><rect x="16" y="15" width="16" height="8" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="16" y="27" width="16" height="8" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="20" cy="19" r="1.5" fill="currentColor"/><circle cx="20" cy="31" r="1.5" fill="currentColor"/></svg>
                 <h3>On-prem by design</h3>
-                <p>Runs as a static Go binary (~10 MB) or Docker container on your network. No data leaves your environment. Suited for air-gapped and critical infrastructure environments.</p>
+                <p>Static Go binary (~10 MB) or Docker container. Runs on your network. No data leaves your environment. Suited for air-gapped and sensitive infrastructure.</p>
             </div>
             <div class="card">
-                <h3>Vendor-neutral posture view</h3>
-                <p>Scans any TLS endpoint regardless of the underlying stack. Mixed environments &mdash; cloud, on-prem, legacy &mdash; get a single consistent assessment with the same scoring methodology.</p>
+                <svg class="hex-icon" viewBox="0 0 48 48" aria-hidden="true"><path class="hex-frame" d="M24 4L42 14v20L24 44 6 34V14z"/><circle cx="24" cy="24" r="10" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M24 18v6l4 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M16 16l-2-2M32 16l2-2M16 32l-2 2M32 32l2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>
+                <h3>Vendor-neutral posture</h3>
+                <p>Scans any TLS endpoint regardless of the underlying stack. Mixed environments get a single consistent assessment with the same scoring methodology.</p>
             </div>
             <div class="card">
+                <svg class="hex-icon" viewBox="0 0 48 48" aria-hidden="true"><path class="hex-frame" d="M24 4L42 14v20L24 44 6 34V14z"/><rect x="16" y="14" width="16" height="20" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M21 28l3 3 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M26 14v-2a2 2 0 00-4 0v2" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
                 <h3>Evidence-first reporting</h3>
-                <p>JSON output with hash-chain integrity (SHA-256). Each evidence pack is reproducible, verifiable, and structured for auditor consumption and compliance review.</p>
+                <p>JSON output with SHA-256 hash-chain integrity. Each evidence pack is reproducible, verifiable, and structured for auditor consumption.</p>
+                <div class="pulse-badge"><span class="pulse-dot"></span> PQC detection enabled</div>
             </div>
             <div class="card">
-                <h3>Drift diffs for change control</h3>
-                <p>Compare scans to track what changed, in which direction, and why it matters. Built for change advisory boards, periodic review cycles, and continuous posture monitoring.</p>
+                <svg class="hex-icon" viewBox="0 0 48 48" aria-hidden="true"><path class="hex-frame" d="M24 4L42 14v20L24 44 6 34V14z"/><circle cx="20" cy="18" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="28" cy="30" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M20 21v3c0 3 8 3 8 3v0" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+                <h3>Drift diffs</h3>
+                <p>Compare scans to track what changed, in which direction, and why it matters. Built for change advisory boards and continuous posture monitoring.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- 6. How it works -->
+<!-- 6. HOW IT WORKS -->
 <section id="how-it-works">
     <div class="container">
-        <h2>How it works</h2>
-        <p class="section-intro">Three commands cover the workflow: scan, diff, and verify.</p>
+        <div class="section-label">How it works</div>
+        <h2>Three commands cover the workflow</h2>
 
-        <div class="code-block">
-            <span class="comment"># 1. Scan endpoints from a target list</span><br>
-            <span class="cmd">qsa scan</span> --targets endpoints.txt --output ./results<br><br>
-            <span class="comment"># 2. Compare scans to track drift</span><br>
-            <span class="cmd">qsa diff</span> baseline.json current.json<br><br>
-            <span class="comment"># 3. Verify evidence pack integrity</span><br>
-            <span class="cmd">qsa verify</span> evidence-pack.json
+        <div class="terminal">
+            <div class="terminal-bar">
+                <span class="terminal-dot"></span>
+                <span class="terminal-dot"></span>
+                <span class="terminal-dot"></span>
+                <span class="terminal-title">qsa &mdash; terminal</span>
+            </div>
+            <div class="terminal-body">
+                <span class="comment"># 1. Scan endpoints from a target list</span><br>
+                <span class="prompt">$ </span><span class="cmd">qsa scan</span> <span class="flag">--targets</span> endpoints.txt <span class="flag">--output</span> ./results<br><br>
+                <span class="comment"># 2. Compare scans to track drift</span><br>
+                <span class="prompt">$ </span><span class="cmd">qsa diff</span> baseline.json current.json<br><br>
+                <span class="comment"># 3. Verify evidence pack integrity</span><br>
+                <span class="prompt">$ </span><span class="cmd">qsa verify</span> evidence-pack.json
+            </div>
         </div>
 
-        <p>Each scan produces two scores and an evidence pack:</p>
+        <p style="color: var(--q-gray-light); margin-bottom: 8px;">Each scan produces two scores and an evidence pack:</p>
 
         <div class="scores-row">
             <div class="score-card">
@@ -374,20 +712,21 @@
                 <div class="score-range">0 &ndash; 100</div>
             </div>
         </div>
-        <p style="font-size:13px; color:var(--gray);">Scores from a scan of 5 public endpoints, February 2026. Hygiene reflects cipher suite and protocol health. PQC Readiness reflects the share of endpoints negotiating post-quantum key exchange.</p>
+        <p class="score-note">Scores from a scan of 5 public endpoints, February 2026. Hygiene reflects cipher suite and protocol health. PQC Readiness reflects the share of endpoints negotiating post-quantum key exchange.</p>
 
-        <p>Output includes a self-contained HTML report with endpoint inventory, per-endpoint findings, scoring rationale, and classification details. The JSON evidence pack preserves hash-chain integrity for audit trails.</p>
+        <p style="color: var(--q-gray); font-size: 14px; margin-top: 24px;">Output includes a self-contained HTML report with endpoint inventory, per-endpoint findings, scoring rationale, and classification details. The JSON evidence pack preserves hash-chain integrity for audit trails.</p>
     </div>
 </section>
 
-<!-- 7. Pilot -->
+<!-- 7. PILOT -->
 <section id="pilot">
     <div class="container">
-        <h2>Pilot program</h2>
-        <p class="section-intro">Two-week engagement: baseline scan plus one follow-up diff. No cost during the pilot period.</p>
+        <div class="section-label">Pilot program</div>
+        <h2>Two-week engagement, no cost</h2>
+        <p class="section-intro">Baseline scan plus one follow-up diff. Passive scanning only. All data stays on your infrastructure.</p>
 
         <div class="two-col">
-            <div>
+            <div class="col-in">
                 <h3>What you provide</h3>
                 <ul>
                     <li>A list of TLS endpoints to scan (host:port)</li>
@@ -395,40 +734,45 @@
                     <li>~30 minutes with your security or GRC team for kickoff and results review</li>
                 </ul>
             </div>
-            <div>
+            <div class="col-in">
                 <h3>What you receive</h3>
                 <ul>
                     <li>Baseline scan with evidence pack (JSON + HTML report)</li>
                     <li>Follow-up scan with drift comparison</li>
                     <li>Prioritized findings and posture scorecards</li>
-                    <li>Next-step recommendations based on your results</li>
                     <li>All data stays on your infrastructure</li>
                 </ul>
             </div>
         </div>
 
-        <div class="safety-note">
+        <div class="callout">
             <strong>Passive scanning only.</strong> QSA performs standard TLS handshakes (ClientHello + ServerHello analysis). No traffic interception, no exploitation, no active probing beyond TLS negotiation.
         </div>
     </div>
 </section>
 
 <!-- 8. CTA -->
-<div class="cta-section">
+<section class="cta-section">
     <div class="container">
+        <div class="section-label">Get started</div>
         <h2>Request a pilot</h2>
         <p>Find out where your TLS infrastructure stands on crypto hygiene and PQC readiness. No cost, no commitment, no data leaves your network.</p>
         <a class="btn-primary" href="mailto:jcano@cainmani.com?subject=QSA%20Pilot%20Inquiry">Contact us</a>
-        <p style="font-size:13px; margin-top:12px; color:rgba(255,255,255,0.6);">jcano@cainmani.com</p>
+        <span class="cta-email">jcano@cainmani.com</span>
     </div>
-</div>
+</section>
 
-<!-- Footer -->
+</main>
+
+<!-- FOOTER -->
 <footer>
     <div class="container">
-        <p>Quankey QSA &mdash; TLS posture assurance and PQC readiness measurement. QSA performs passive TLS handshake analysis only. It does not exploit vulnerabilities, manage certificates, or implement PQC algorithms.</p>
-        <p style="margin-top:8px;"><a href="mailto:jcano@cainmani.com">Contact</a> &nbsp;&middot;&nbsp; <a href="https://github.com/JCQuankey/quankey-qsa-landing/blob/main/SECURITY.md">Responsible disclosure</a></p>
-        <p class="standards">Standards referenced: NIST FIPS 203/204/205 (August 2024), NSA CNSA 2.0 (September 2022), NIST IR 8547 (November 2024), PCI-DSS v4.0</p>
+        <p>Quankey QSA &mdash; TLS posture assurance and PQC readiness measurement. Performs passive TLS handshake analysis only. Does not exploit vulnerabilities, manage certificates, or implement PQC algorithms.</p>
+        <div class="footer-links">
+            <a href="mailto:jcano@cainmani.com">Contact</a>
+            <a href="https://github.com/JCQuankey/quankey-qsa-landing/blob/main/SECURITY.md">Responsible disclosure</a>
+        </div>
+        <p class="footer-standards">Standards referenced: NIST FIPS 203/204/205 (August 2024), NSA CNSA 2.0 (September 2022), NIST IR 8547 (November 2024), PCI-DSS v4.0</p>
     </div>
 </footer>
 
